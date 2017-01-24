@@ -16,6 +16,14 @@ module Listner
     if added.count > 0
       added.each do |file|
         puts ENV['RECEIVER']
+        time = 0
+        until `lsof | grep #{file}`.empty? do
+          sleep 1
+          puts "Waiting until file uploading #{time} sec ... "
+          time += 1
+        end
+        time = 0
+        puts "File downloaded successfully!"
         mail = Mail.new do
           to ENV['RECEIVER']
           from 'notify@partsable.com'
